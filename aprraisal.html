@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Annual Self-Appraisal – Professor</title>
+  <style>
+    body { font-family: Arial, sans-serif; background:#f7f7fb; margin:0; padding:20px; }
+    h1 { text-align:center; }
+    h2 { margin-top:30px; border-bottom:2px solid #ddd; padding-bottom:4px; }
+    form { max-width:1000px; margin:0 auto; background:#fff; padding:20px; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); }
+    .row { margin-bottom:12px; }
+    label { display:block; font-weight:bold; margin-bottom:4px; }
+    input, textarea { width:100%; padding:8px; border:1px solid #ccc; border-radius:6px; }
+    textarea { min-height:60px; }
+    .files { margin:8px 0; padding:10px; border:1px dashed #bbb; border-radius:8px; background:#fafafa; }
+    .add-btn { margin:6px 0; padding:6px 10px; background:#3b82f6; color:#fff; border:none; border-radius:6px; cursor:pointer; }
+    button.submit { padding:10px 16px; border:none; border-radius:8px; background:#16a34a; color:#fff; font-weight:bold; cursor:pointer; }
+    button:disabled { background:#aaa; }
+    .success, .error { display:none; margin:10px 0; padding:10px; border-radius:8px; }
+    .success { background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; }
+    .error { background:#fef2f2; border:1px solid #fecaca; color:#991b1b; }
+  </style>
+</head>
+<body>
+  <h1>Annual Self-Appraisal – Professor</h1>
+
+  <div id="msgOk" class="success">✅ Submitted successfully. Reference ID: <span id="refId"></span></div>
+  <div id="msgErr" class="error">❌ Submission failed. Please try again.</div>
+
+  <form id="appraisalForm" enctype="multipart/form-data">
+    <!-- Section A -->
+    <h2>A. Faculty Details</h2>
+    <div class="row"><label>Name *</label><input name="facultyName" required></div>
+    <div class="row"><label>Designation *</label><input name="designation" required></div>
+    <div class="row"><label>Department/School *</label><input name="department" required></div>
+    <div class="row"><label>Academic Year *</label><input name="academicYear" required></div>
+
+    <!-- Section B -->
+    <h2>B. Teaching–Learning & Academic Contribution (30%)</h2>
+    <div id="courses"></div>
+    <button type="button" class="add-btn" onclick="addRow('courses',['Course Title','Level','Credits','Term','Contact Hours'])">+ Add Course</button>
+    <div class="files"><input type="file" name="proofs_courses" accept="application/pdf" multiple></div>
+
+    <div id="pedagogy"></div>
+    <button type="button" class="add-btn" onclick="addRow('pedagogy',['Course Title','Pedagogy Used','ICT Tool'])">+ Add Pedagogy</button>
+    <div class="files"><input type="file" name="proofs_pedagogy" accept="application/pdf" multiple></div>
+
+    <!-- Section C -->
+    <h2>C. Research, Publications & Academic Output (40%)</h2>
+    <div id="papers"></div>
+    <button type="button" class="add-btn" onclick="addRow('papers',['Title','Journal','Index Type'])">+ Add Paper</button>
+    <div class="files"><input type="file" name="proofs_papers" accept="application/pdf" multiple></div>
+
+    <div id="books"></div>
+    <button type="button" class="add-btn" onclick="addRow('books',['Book/Chapter','Publisher','ISBN'])">+ Add Book/Chapter</button>
+    <div class="files"><input type="file" name="proofs_books" accept="application/pdf" multiple></div>
+
+    <div id="projects"></div>
+    <button type="button" class="add-btn" onclick="addRow('projects',['Title','Funding Agency','PI','Amount','Status'])">+ Add Project</button>
+    <div class="files"><input type="file" name="proofs_projects" accept="application/pdf" multiple></div>
+
+    <div id="patents"></div>
+    <button type="button" class="add-btn" onclick="addRow('patents',['Title','Inventors','Application No.','Status'])">+ Add Patent</button>
+    <div class="files"><input type="file" name="proofs_patents" accept="application/pdf" multiple></div>
+
+    <div id="conferences"></div>
+    <button type="button" class="add-btn" onclick="addRow('conferences',['Conference','Role','Date'])">+ Add Conference</button>
+    <div class="files"><input type="file" name="proofs_conferences" accept="application/pdf" multiple></div>
+
+    <!-- Section D -->
+    <h2>D. Extension, Outreach & Institutional Contribution (20%)</h2>
+    <div id="extension"></div>
+    <button type="button" class="add-btn" onclick="addRow('extension',['Activity','Nature','Date','Location'])">+ Add Extension Activity</button>
+    <div class="files"><input type="file" name="proofs_extension" accept="application/pdf" multiple></div>
+
+    <div id="events"></div>
+    <button type="button" class="add-btn" onclick="addRow('events',['Event Type','Role','Date'])">+ Add Event</button>
+    <div class="files"><input type="file" name="proofs_events" accept="application/pdf" multiple></div>
+
+    <div id="committees"></div>
+    <button type="button" class="add-btn" onclick="addRow('committees',['Committee','Role','Duration'])">+ Add Committee</button>
+    <div class="files"><input type="file" name="proofs_committees" accept="application/pdf" multiple></div>
+
+    <!-- Section E -->
+    <h2>E. Professional Development (10%)</h2>
+    <div id="fdps"></div>
+    <button type="button" class="add-btn" onclick="addRow('fdps',['Title','Organized By','Duration'])">+ Add FDP</button>
+    <div class="files"><input type="file" name="proofs_fdps" accept="application/pdf" multiple></div>
+
+    <div id="moocs"></div>
+    <button type="button" class="add-btn" onclick="addRow('moocs',['Course Title','Platform','Duration'])">+ Add MOOC</button>
+    <div class="files"><input type="file" name="proofs_moocs" accept="application/pdf" multiple></div>
+
+    <div id="memberships"></div>
+    <button type="button" class="add-btn" onclick="addRow('memberships',['Body','Type','ID','Validity'])">+ Add Membership</button>
+    <div class="files"><input type="file" name="proofs_memberships" accept="application/pdf" multiple></div>
+
+    <div id="awards"></div>
+    <button type="button" class="add-btn" onclick="addRow('awards',['Title','Awarding Body','Year'])">+ Add Award</button>
+    <div class="files"><input type="file" name="proofs_awards" accept="application/pdf" multiple></div>
+
+    <!-- Section F -->
+    <h2>F. Administrative Responsibilities (10%)</h2>
+    <div id="positions"></div>
+    <button type="button" class="add-btn" onclick="addRow('positions',['Position','Department','Duration'])">+ Add Position</button>
+    <div class="files"><input type="file" name="proofs_positions" accept="application/pdf" multiple></div>
+
+    <div id="duties"></div>
+    <button type="button" class="add-btn" onclick="addRow('duties',['Duty','Unit','Duration'])">+ Add Duty</button>
+    <div class="files"><input type="file" name="proofs_duties" accept="application/pdf" multiple></div>
+
+    <div id="leadership"></div>
+    <button type="button" class="add-btn" onclick="addRow('leadership',['Committee','Role','Duration'])">+ Add Leadership</button>
+    <div class="files"><input type="file" name="proofs_leadership" accept="application/pdf" multiple></div>
+
+    <div id="policy"></div>
+    <button type="button" class="add-btn" onclick="addRow('policy',['Policy/Initiative','Contribution','Level'])">+ Add Policy</button>
+    <div class="files"><input type="file" name="proofs_policy" accept="application/pdf" multiple></div>
+
+    <!-- Section G -->
+    <h2>G. Self-Assessment & Future Goals</h2>
+    <div class="row"><label>Strengths & Improvement</label><textarea name="selfAssessment"></textarea></div>
+    <div class="row"><label>Future Plans</label><textarea name="futurePlans"></textarea></div>
+
+    <div class="row"><label><input type="checkbox" id="declare" required> Declaration: I hereby declare the information is true.</label></div>
+
+    <div class="row"><button type="submit" class="submit" id="submitBtn">Submit Application</button></div>
+  </form>
+
+  <script>
+    // 🚨 Replace with your Apps Script Web App URL
+    const apiBase = "YOUR_WEB_APP_URL";
+
+    function addRow(section, labels) {
+      const div = document.createElement("div");
+      div.className = "row";
+      labels.forEach(l => {
+        const inp = document.createElement("input");
+        inp.name = section+"[]";
+        inp.placeholder = l;
+        div.appendChild(inp);
+      });
+      document.getElementById(section).appendChild(div);
+    }
+
+    document.getElementById("appraisalForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("submitBtn");
+      btn.disabled = true;
+      const formEl = e.currentTarget;
+
+      // collect simple fields
+      const data = {
+        facultyName: formEl.facultyName.value,
+        designation: formEl.designation.value,
+        department: formEl.department.value,
+        academicYear: formEl.academicYear.value,
+        selfAssessment: formEl.selfAssessment.value,
+        futurePlans: formEl.futurePlans.value,
+        declaration: document.getElementById("declare").checked
+      };
+
+      // collect arrays
+      ["courses","pedagogy","papers","books","projects","patents","conferences",
+       "extension","events","committees","fdps","moocs","memberships","awards",
+       "positions","duties","leadership","policy"].forEach(sec => {
+        data[sec] = Array.from(formEl.querySelectorAll(`[name='${sec}[]']`))
+                          .map(i=>i.value).filter(Boolean);
+      });
+
+      const payload = new FormData();
+      payload.append("data", JSON.stringify(data));
+
+      // attach files
+      formEl.querySelectorAll("input[type=file]").forEach(inp => {
+        for (const f of inp.files) {
+          payload.append(inp.name, f);
+        }
+      });
+
+      try {
+        const res = await fetch(apiBase, { method:"POST", body: payload });
+        const out = await res.json();
+        if (out.ok) {
+          document.getElementById("msgErr").style.display="none";
+          document.getElementById("msgOk").style.display="block";
+          document.getElementById("refId").textContent = out.ref;
+          formEl.reset();
+        } else throw new Error(out.error||"error");
+      } catch(err) {
+        document.getElementById("msgOk").style.display="none";
+        document.getElementById("msgErr").style.display="block";
+        console.error(err);
+      } finally {
+        btn.disabled=false;
+      }
+    });
+  </script>
+</body>
+</html>
